@@ -36,7 +36,44 @@ async function loginUser(req, res) {
     const isMatch = await user.comparePassword(password);
     if (!isMatch) return res.status(401).json({ error: 'Invalid credentials' });
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
-    res.json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
+    let userInfo = {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role
+    };
+    if (user.role === 'Child') {
+      // Populate all child fields and handle streak logic
+      let child = await Child.findById(user._id);
+      if (child) {
+        const now = new Date();
+        let shouldIncrementStreak = false;
+        if (child.lastLogin) {
+          const diff = now - child.lastLogin;
+          if (diff >= 24 * 60 * 60 * 1000) {
+            child.streak = (child.streak || 0) + 1;
+            shouldIncrementStreak = true;
+          }
+        } else {
+          // First login, start streak
+          child.streak = 1;
+          shouldIncrementStreak = true;
+        }
+        child.lastLogin = now;
+        await child.save();
+        child = child.toObject();
+        userInfo = {
+          ...userInfo,
+          age: child.age,
+          isFlagged: child.isFlagged,
+          badges: child.badges,
+          reportsCount: child.reportsCount,
+          coursesCompleted: child.coursesCompleted,
+          streak: child.streak
+        };
+      }
+    }
+    res.json({ token, user: userInfo });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

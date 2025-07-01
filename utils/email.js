@@ -43,7 +43,7 @@ const templates = {
 }
 
 // Send email function using Nodemailer
-const sendEmail = async ({ to, subject, template, data }) => {
+const sendEmail = async ({ to, subject, template, data, attachments }) => {
   try {
     let html = templates[template]?.html || template
     let finalSubject = templates[template]?.subject || subject
@@ -62,6 +62,7 @@ const sendEmail = async ({ to, subject, template, data }) => {
       to,
       subject: finalSubject,
       html,
+      attachments: attachments || []
     }
 
     const result = await transporter.sendMail(mailOptions)

@@ -27,6 +27,11 @@ const User = mongoose.model('User', UserSchema);
 const Child = User.discriminator('Child', new mongoose.Schema({
   age: { type: Number, required: true, min: 10, max: 17 },
   isFlagged: { type: Boolean, default: false },
+  badges: { type: [String], default: [] },
+  reportsCount: { type: Number, default: 0 },
+  coursesCompleted: { type: Number, default: 0 },
+  streak: { type: Number, default: 0 },
+  lastLogin: { type: Date }, // Track last login for streaks
 }));
 
 const SchoolPsychologist = User.discriminator('SchoolPsychologist', new mongoose.Schema({}));

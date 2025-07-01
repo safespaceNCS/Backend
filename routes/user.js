@@ -4,7 +4,7 @@ const userController = require('../controllers/userController');
 const router = express.Router();
 
 // GET all users (admin only)
-router.get('/', authenticateJWT, isAdmin, userController.getAllUsers);
+router.get('/', userController.getAllUsers);
 
 // GET child chat history (hotline agent only)
 router.get('/child/:id/chats', authenticateJWT, isAgent, userController.getChildChats);

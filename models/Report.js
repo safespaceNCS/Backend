@@ -2,15 +2,15 @@ const mongoose = require('mongoose');
 
 const ReportSchema = new mongoose.Schema({
   anonymous: { type: Boolean, default: true },
-  feeling: { type: String, required: true },
+  feeling: { type: String},
   notify: { type: String }, // e.g. email or phone if not anonymous
-  what: { type: String, required: true },
+  what: { type: String},
   when: { type: String }, // free text or could be Date
   where: { type: String },
   who: { type: String },
   child: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }, // optional, only if not anonymous
-  createdAt: { type: Date, default: Date.now },
-  status: { type: String, enum: ['open', 'reviewed', 'closed'], default: 'open' },
+  date: { type: Date, default: Date.now },
+  status: { type: String, enum: ['seen', 'pending'], default: 'pending' },
   agentNotes: { type: String },
 });
 
