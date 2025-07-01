@@ -1,7 +1,5 @@
 const { User, Child, HotlineAgent } = require('../models/User');
 const ChatMessage = require('../models/ChatMessage');
-const ConsentState = require('../models/ConsentState');
-const Alert = require('../models/Alert');
 
 // Get all users (admin only)
 exports.getAllUsers = async (req, res) => {
